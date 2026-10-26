@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administración - CoreBiz</title>
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-light">
+
+<nav class="navbar navbar-dark bg-black border-bottom border-secondary mb-4">
+  <div class="container">
+    <span class="navbar-brand mb-0 h1"><i class="bi bi-gear-fill me-2"></i>Administrador Web (Neon DB)</span>
+    <a href="index.html" target="_blank" class="btn btn-outline-info btn-sm"><i class="bi bi-box-arrow-up-right me-1"></i>Ver Página Web</a>
+  </div>
+</nav>
+
+<div class="container pb-5">
+  <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-proyectos">1. Proyectos e Imágenes</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-servicios">2. Servicios</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-textos">3. Textos Generales</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-mensajes">4. Mensajes Recibidos</button></li>
+  </ul>
+
+  <div class="tab-content">
+    
+    <!-- 1. PROYECTOS E IMÁGENES -->
+    <div class="tab-pane fade show active" id="tab-proyectos">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card bg-secondary bg-opacity-10 border-secondary">
+            <div class="card-body">
+              <h5 id="form-proy-titulo">Nuevo Proyecto</h5>
+              <form id="form-proyecto">
+                <input type="hidden" id="proy-id">
+                <input type="hidden" id="proy-img-actual">
+                <div class="mb-2">
+                  <label class="form-label">Título</label>
+                  <input type="text" id="proy-titulo" class="form-control" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Categoría</label>
+                  <select id="proy-categoria" class="form-select">
+                    <option value="1">Desarrollo Web</option>
+                    <option value="2">Inteligencia Artificial</option>
+                    <option value="3">Bases de Datos</option>
+                  </select>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Descripción Corta</label>
+                  <textarea id="proy-desc" class="form-control" rows="2" required></textarea>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Subir Imagen (JPG/PNG/WEBP)</label>
+                  <input type="file" id="proy-imagen" class="form-control" accept="image/*">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">URL Demo / Enlace</label>
+                  <input type="text" id="proy-url" class="form-control" placeholder="https://...">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Guardar Proyecto</button>
+                <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-cancelar-proy" onclick="resetFormProyecto()">Cancelar Edición</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <table class="table table-dark table-hover align-middle">
+            <thead><tr><th>Imagen</th><th>Título</th><th>Descripción</th><th>Acciones</th></tr></thead>
+            <tbody id="tabla-proyectos"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SERVICIOS -->
+    <div class="tab-pane fade" id="tab-servicios">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card bg-secondary bg-opacity-10 border-secondary">
+            <div class="card-body">
+              <h5>Guardar Servicio</h5>
+              <form id="form-servicio">
+                <input type="hidden" id="serv-id">
+                <div class="mb-2">
+                  <label class="form-label">Título</label>
+                  <input type="text" id="serv-titulo" class="form-control" required>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Descripción</label>
+                  <textarea id="serv-desc" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Ícono Bootstrap (ej: bi-cpu, bi-laptop)</label>
+                  <input type="text" id="serv-icono" class="form-control" value="bi-code-slash">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Guardar Servicio</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <table class="table table-dark table-hover">
+            <thead><tr><th>Ícono</th><th>Título</th><th>Descripción</th><th>Acciones</th></tr></thead>
+            <tbody id="tabla-servicios"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TEXTOS GENERALES -->
+    <div class="tab-pane fade" id="tab-textos">
+      <form id="form-textos" class="card bg-secondary bg-opacity-10 border-secondary p-4">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Título Principal (Hero)</label>
+            <input type="text" id="cfg-hero_titulo" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Título Sección Nosotros</label>
+            <input type="text" id="cfg-about_titulo" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Subtítulo Principal (Hero)</label>
+            <textarea id="cfg-hero_subtitulo" class="form-control" rows="3"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Texto Sección Nosotros</label>
+            <textarea id="cfg-about_texto" class="form-control" rows="3"></textarea>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Teléfono</label>
+            <input type="text" id="cfg-telefono" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Correo Electrónico</label>
+            <input type="text" id="cfg-email" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Ubicación</label>
+            <input type="text" id="cfg-ubicacion" class="form-control">
+          </div>
+          <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-success"><i class="bi bi-save me-1"></i>Guardar Todos los Textos</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- 4. MENSAJES DE CONTACTO -->
+    <div class="tab-pane fade" id="tab-mensajes">
+      <table class="table table-dark table-striped">
+        <thead><tr><th>Fecha</th><th>Nombre</th><th>Email</th><th>Asunto</th><th>Mensaje</th></tr></thead>
+        <tbody id="tabla-mensajes"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Cargar todo al iniciar
+  async function initAdmin() {
+    cargarProyectos();
+    cargarServicios();
+    cargarTextos();
+    cargarMensajes();
+  }
+
+  // --- PROYECTOS ---
+  async function cargarProyectos() {
+    const res = await fetch('/api/proyectos');
+    const data = await res.json();
+    document.getElementById('tabla-proyectos').innerHTML = data.map(p => `
+      <tr>
+        <td><img src="${p.imagen_url}" width="60" height="45" style="object-fit:cover; border-radius:4px"></td>
+        <td><strong>${p.titulo}</strong><br><small class="text-info">${p.categoria_nombre || ''}</small></td>
+        <td>${p.descripcion_corta || ''}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-1" onclick='editarProyecto(${JSON.stringify(p)})'><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarProyecto(${p.id})"><i class="bi bi-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  document.getElementById('form-proyecto').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('proy-id').value;
+    const formData = new FormData();
+    formData.append('titulo', document.getElementById('proy-titulo').value);
+    formData.append('categoria_id', document.getElementById('proy-categoria').value);
+    formData.append('descripcion_corta', document.getElementById('proy-desc').value);
+    formData.append('url_demo', document.getElementById('proy-url').value);
+    formData.append('imagen_actual', document.getElementById('proy-img-actual').value);
+    
+    const fileInput = document.getElementById('proy-imagen');
+    if (fileInput.files[0]) formData.append('imagen', fileInput.files[0]);
+
+    const url = id ? `/api/proyectos/${id}` : '/api/proyectos';
+    const method = id ? 'PUT' : 'POST';
+
+    await fetch(url, { method, body: formData });
+    resetFormProyecto();
+    cargarProyectos();
+  });
+
+  function editarProyecto(p) {
+    document.getElementById('form-proy-titulo').innerText = 'Editar Proyecto';
+    document.getElementById('proy-id').value = p.id;
+    document.getElementById('proy-titulo').value = p.titulo;
+    document.getElementById('proy-categoria').value = p.categoria_id || 1;
+    document.getElementById('proy-desc').value = p.descripcion_corta || '';
+    document.getElementById('proy-url').value = p.url_demo || '';
+    document.getElementById('proy-img-actual').value = p.imagen_url || '';
+    document.getElementById('btn-cancelar-proy').classList.remove('d-none');
+  }
+
+  function resetFormProyecto() {
+    document.getElementById('form-proyecto').reset();
+    document.getElementById('proy-id').value = '';
+    document.getElementById('form-proy-titulo').innerText = 'Nuevo Proyecto';
+    document.getElementById('btn-cancelar-proy').classList.add('d-none');
+  }
+
+  async function eliminarProyecto(id) {
+    if (confirm('¿Eliminar este proyecto?')) {
+      await fetch(`/api/proyectos/${id}`, { method: 'DELETE' });
+      cargarProyectos();
+    }
+  }
+
+  // --- SERVICIOS ---
+  async function cargarServicios() {
+    const res = await fetch('/api/servicios');
+    const data = await res.json();
+    document.getElementById('tabla-servicios').innerHTML = data.map(s => `
+      <tr>
+        <td><i class="bi ${s.icono} fs-4 text-info"></i></td>
+        <td><strong>${s.titulo}</strong></td>
+        <td>${s.descripcion}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-1" onclick='editarServicio(${JSON.stringify(s)})'><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarServicio(${s.id})"><i class="bi bi-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  document.getElementById('form-servicio').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('serv-id').value;
+    const body = {
+      titulo: document.getElementById('serv-titulo').value,
+      descripcion: document.getElementById('serv-desc').value,
+      icono: document.getElementById('serv-icono').value
+    };
+    await fetch(id ? `/api/servicios/${id}` : '/api/servicios', {
+      method: id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    document.getElementById('form-servicio').reset();
+    document.getElementById('serv-id').value = '';
+    cargarServicios();
+  });
+
+  function editarServicio(s) {
+    document.getElementById('serv-id').value = s.id;
+    document.getElementById('serv-titulo').value = s.titulo;
+    document.getElementById('serv-desc').value = s.descripcion;
+    document.getElementById('serv-icono').value = s.icono;
+  }
+
+  async function eliminarServicio(id) {
+    if (confirm('¿Eliminar este servicio?')) {
+      await fetch(`/api/servicios/${id}`, { method: 'DELETE' });
+      cargarServicios();
+    }
+  }
+
+  // --- TEXTOS GENERALES ---
+  async function cargarTextos() {
+    const res = await fetch('/api/configuracion');
+    const cfg = await res.json();
+    for (const [k, v] of Object.entries(cfg)) {
+      const el = document.getElementById(`cfg-${k}`);
+      if (el) el.value = v;
+    }
+  }
+
+  document.getElementById('form-textos').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const campos = ['hero_titulo', 'hero_subtitulo', 'about_titulo', 'about_texto', 'telefono', 'email', 'ubicacion'];
+    const body = {};
+    campos.forEach(c => body[c] = document.getElementById(`cfg-${c}`).value);
+    await fetch('/api/configuracion', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    alert('¡Textos actualizados en Neon!');
+  });
+
+  // --- MENSAJES ---
+  async function cargarMensajes() {
+    const res = await fetch('/api/mensajes');
+    const data = await res.json();
+    document.getElementById('tabla-mensajes').innerHTML = data.map(m => `
+      <tr>
+        <td>${new Date(m.created_at).toLocaleString()}</td>
+        <td>${m.nombre}</td>
+        <td>${m.email}</td>
+        <td>${m.asunto}</td>
+        <td>${m.mensaje}</td>
+      </tr>
+    `).join('');
+  }
+
+  initAdmin();
+</script>
+</body>
+</html>
