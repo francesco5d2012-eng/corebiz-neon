@@ -23,9 +23,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Conexión a PostgreSQL Neon
+// Conexión a PostgreSQL Neon (compatible con entorno local y Render)
 const pool = new Pool({
-  connectionString: 'postgresql://neondb_owner:npg_Os5HqJySihx8@ep-empty-sound-b4lc9lre-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require',
+  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_Os5HqJySihx8@ep-empty-sound-b4lc9lre-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require',
   ssl: { rejectUnauthorized: false }
 });
 
@@ -143,5 +143,5 @@ app.get('/api/mensajes', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-const PORT = 3001;
-app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
